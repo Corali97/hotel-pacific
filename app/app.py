@@ -98,9 +98,9 @@ def render_form(message: str | None = None, category: str | None = None, data: D
 
             <label for=\"room_type\">Tipo de habitación</label>
             <select id=\"room_type\" name=\"room_type\" required>
-                <option value=\"estándar\" {'selected' if data.get('room_type', '') == 'estándar' else ''}>Estándar</option>
-                <option value=\"deluxe\" {'selected' if data.get('room_type', '') == 'deluxe' else ''}>Deluxe</option>
-                <option value=\"suite\" {'selected' if data.get('room_type', '') == 'suite' else ''}>Suite</option>
+                <option value=\"estándar\"{' selected="selected"' if data.get('room_type', '') == 'estándar' else ''}>Estándar</option>
+                <option value=\"deluxe\"{' selected="selected"' if data.get('room_type', '') == 'deluxe' else ''}>Deluxe</option>
+                <option value=\"suite\"{' selected="selected"' if data.get('room_type', '') == 'suite' else ''}>Suite</option>
             </select>
 
             <button type=\"submit\" class=\"primary\">Guardar reserva</button>
