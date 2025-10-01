@@ -75,6 +75,7 @@ def render_messages(message: str | None, category: str | None) -> str:
     return f"<ul class=\"messages\"><li class=\"{category}\">{message}</li></ul>"
 
 
+
 def render_form(message: str | None = None, category: str | None = None, data: Dict[str, str] | None = None) -> bytes:
     data = data or {}
     room_type_options = [
@@ -113,42 +114,51 @@ def render_form(message: str | None = None, category: str | None = None, data: D
             <button type=\"submit\" class=\"primary\">Guardar reserva</button>
         </form>
     """
-    print(content)  # Debug: mostrar el HTML generado en la consola
     return (HTML_HEAD + content + HTML_FOOT).encode("utf-8")
 
 
+# Nueva función para mostrar el listado de reservas
 def render_reservations() -> bytes:
     reservations = get_reservations()
-    if reservations:
-        rows_html = "".join(
-            f"<tr><td>{name}</td><td>{email}</td><td>{check_in}</td><td>{check_out}</td><td>{guests}</td><td>{room_type}</td><td>{created_at}</td></tr>"
-            for name, email, check_in, check_out, guests, room_type, created_at in reservations
-        )
-        table = f"""
-        <h2>Reservas registradas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Llegada</th>
-                    <th>Salida</th>
-                    <th>Huéspedes</th>
-                    <th>Tipo de habitación</th>
-                    <th>Creado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows_html}
-            </tbody>
-        </table>
+    if not reservations:
+        content = """
+            <h2>Reservas registradas</h2>
+            <p>No hay reservas registradas aún. Crea la primera desde el formulario.</p>
         """
     else:
-        table = """
-        <h2>Reservas registradas</h2>
-        <p>No hay reservas registradas aún. Crea la primera desde el formulario.</p>
+        content = """
+            <h2>Reservas registradas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Llegada</th>
+                        <th>Salida</th>
+                        <th>Huéspedes</th>
+                        <th>Tipo</th>
+                        <th>Creado</th>
+                    </tr>
+                </thead>
+                <tbody>
         """
-    return (HTML_HEAD + table + HTML_FOOT).encode("utf-8")
+        for r in reservations:
+            content += f"""
+                <tr>
+                    <td>{r[0]}</td>
+                    <td>{r[1]}</td>
+                    <td>{r[2]}</td>
+                    <td>{r[3]}</td>
+                    <td>{r[4]}</td>
+                    <td>{r[5]}</td>
+                    <td>{r[6]}</td>
+                </tr>
+            """
+        content += """
+                </tbody>
+            </table>
+        """
+    return (HTML_HEAD + content + HTML_FOOT).encode("utf-8")
 
 
 def parse_post_data(environ) -> Dict[str, str]:
@@ -162,6 +172,9 @@ def parse_post_data(environ) -> Dict[str, str]:
 
 
 def application(environ, start_response):
+    init_db()
+    path = environ.get("PATH_INFO", "/")
+    method = environ.get("REQUEST_METHOD", "GET").upper()
     if path == "/dashboard" and method == "GET":
         with open(BASE_DIR / "templates" / "dashboard.html", encoding="utf-8") as f:
             html = f.read()
@@ -172,9 +185,6 @@ def application(environ, start_response):
             html = f.read()
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
         return [html.encode("utf-8")]
-    init_db()
-    path = environ.get("PATH_INFO", "/")
-    method = environ.get("REQUEST_METHOD", "GET").upper()
     if path == "/reservar" and method == "GET":
         # Obtener el tipo de habitación desde la query string
         query = environ.get("QUERY_STRING", "")
