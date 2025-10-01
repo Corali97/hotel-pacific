@@ -55,11 +55,18 @@ def init_db() -> None:
                 check_out DATE NOT NULL,
                 guests INTEGER NOT NULL,
                 room_type TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pendiente',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
         )
-
+        try:
+            conn.execute(
+                "ALTER TABLE reservations ADD COLUMN status TEXT NOT NULL DEFAULT 'pendiente'"
+            )
+        except sqlite3.OperationalError:
+            # La columna ya existe
+            pass
 
 def get_reservations() -> Tuple[Tuple]:
     with sqlite3.connect(DB_PATH) as conn:
@@ -247,10 +254,7 @@ def application(environ, start_response):
         return [render_reservations()]
 
     if path == "/habitaciones" and method == "GET":
-        with open(BASE_DIR / "templates" / "rooms.html", encoding="utf-8") as f:
-            html = f.read()
-        start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
-        return [html.encode("utf-8")]
+
 
     if path == "/guardar" and method == "POST":
         data = parse_post_data(environ)
