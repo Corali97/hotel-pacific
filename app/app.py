@@ -55,7 +55,6 @@ def init_db() -> None:
                 check_out DATE NOT NULL,
                 guests INTEGER NOT NULL,
                 room_type TEXT NOT NULL,
-                status TEXT NOT NULL DEFAULT 'pendiente',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
@@ -67,6 +66,8 @@ def init_db() -> None:
         except sqlite3.OperationalError:
             # La columna ya existe
             pass
+
+>>>>>>> theirs
 
 def get_reservations() -> Tuple[Tuple]:
     with sqlite3.connect(DB_PATH) as conn:
