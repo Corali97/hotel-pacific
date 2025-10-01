@@ -13,22 +13,23 @@ STYLE_PATH = BASE_DIR / "static" / "style.css"
 
 HTML_HEAD = """<!DOCTYPE html>
 <html lang=\"es\">
-  <head>
-    <meta charset=\"UTF-8\" />
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
-    <title>Hotel Pacific</title>
-    <link rel=\"stylesheet\" href=\"/static/style.css\" />
-  </head>
-  <body>
-    <header>
-      <h1>Hotel Pacific</h1>
-      <nav>
-        <a href=\"/\">Nueva reserva</a>
-        <a href=\"/reservas\">Listado de reservas</a>
-      </nav>
-    </header>
-    <main>
-      <section class=\"card\">
+    <head>
+        <meta charset=\"UTF-8\" />
+        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
+        <title>Hotel Pacific</title>
+        <link rel=\"stylesheet\" href=\"/static/style.css\" />
+    </head>
+    <body>
+        <header>
+            <h1>Hotel Pacific</h1>
+            <nav>
+                <a href=\"/\">Inicio</a>
+                <a href=\"/reservar\">Nueva reserva</a>
+                <a href=\"/reservas\">Listado de reservas</a>
+            </nav>
+        </header>
+        <main>
+            <section class=\"card\">
 """
 
 HTML_FOOT = """
@@ -145,6 +146,7 @@ def render_reservations() -> bytes:
                         <th>Tipo</th>
                         <th>Precio</th>
                         <th>Creado</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -162,6 +164,7 @@ def render_reservations() -> bytes:
                     <td>{tipo.capitalize()}</td>
                     <td>${precio:,} por día</td>
                     <td>{r[6]}</td>
+                    <td><a class='primary' style='background:#ef476f;color:#fff;padding:0.5rem 1rem;border-radius:0.5rem;text-decoration:none;' href='/pagos'>Pagar</a></td>
                 </tr>
             """
         content += """
