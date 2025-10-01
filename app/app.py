@@ -119,30 +119,30 @@ def render_form(message: str | None = None, category: str | None = None, data: D
 
 def render_reservations() -> bytes:
     reservations = get_reservations()
-        if reservations:
-                rows_html = "".join(
-                        f"<tr><td>{name}</td><td>{email}</td><td>{check_in}</td><td>{check_out}</td><td>{guests}</td><td>{room_type}</td><td>{created_at}</td></tr>"
-                        for name, email, check_in, check_out, guests, room_type, created_at in reservations
-                )
-                table = f"""
-                <h2>Reservas registradas</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Llegada</th>
-                            <th>Salida</th>
-                            <th>Huéspedes</th>
-                            <th>Tipo de habitación</th>
-                            <th>Creado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows_html}
-                    </tbody>
-                </table>
-                """
+    if reservations:
+        rows_html = "".join(
+            f"<tr><td>{name}</td><td>{email}</td><td>{check_in}</td><td>{check_out}</td><td>{guests}</td><td>{room_type}</td><td>{created_at}</td></tr>"
+            for name, email, check_in, check_out, guests, room_type, created_at in reservations
+        )
+        table = f"""
+        <h2>Reservas registradas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Llegada</th>
+                    <th>Salida</th>
+                    <th>Huéspedes</th>
+                    <th>Tipo de habitación</th>
+                    <th>Creado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rows_html}
+            </tbody>
+        </table>
+        """
     else:
         table = """
         <h2>Reservas registradas</h2>
