@@ -1,5 +1,28 @@
+
+# Hotel Pacific
+
+Este repositorio contiene el prototipo funcional del sistema de reservas del Hotel Pacific. Incluye la documentación de diseño y un MVP construido con Python, SQLite y un servidor WSGI ligero que permite registrar reservas básicas desde un formulario web.
+
+## 🚀 Cómo ejecutar el MVP
+
+1. (Opcional) Crear y activar un entorno virtual de Python 3.11.
+2. Instalar dependencias estándar (no se requieren paquetes externos).
+3. Ejecutar la aplicación:
+	```bash
+	python app/app.py
+	```
+4. Abrir `http://127.0.0.1:5000/` en el navegador para acceder al formulario de reservas.
+
+La base de datos SQLite (`app/reservations.db`) se crea automáticamente la primera vez que se levanta el servidor.
+
 ## 📂 Contenido del Repositorio
-- [/docs/uml](docs/uml) → Diagramas UML
-- [/docs/vistas](docs/vistas) → Mockups y prototipos
-- [/docs/DOD](docs/DOD) → Planilla Definition of Done
-- [/design](design) → Archivos de diseño (Word/Imágenes)
+- `/app` → Código fuente del MVP conectado a la base de datos.
+- `/docs/uml` → Diagramas UML.
+- `/docs/vistas` → Mockups, prototipos y capturas de pantalla del MVP en ejecución.
+- `/docs/testing` → Evidencia de pruebas de usuario (formato PRY3211).
+- `/docs/DOD` → Planilla Definition of Done.
+- `/design` → Archivos de diseño.
+
+## 🧪 Escenarios probados
+
+Consulta `docs/testing/PRY3211_Exp3_S8_Formato_de_respuestas.md` para revisar las pruebas realizadas sobre las historias de usuario del MVP.

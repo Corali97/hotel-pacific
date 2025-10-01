@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel Pacific - Reservar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header>
+      <h1>Hotel Pacific</h1>
+      <nav>
+        <a href="{{ url_for('index') }}">Nueva reserva</a>
+        <a href="{{ url_for('reservations') }}">Listado de reservas</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Formulario de reserva</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="messages">
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <form method="post" action="{{ url_for('index') }}" class="form-grid">
+          <label for="guest_name">Nombre completo</label>
+          <input type="text" id="guest_name" name="guest_name" required />
+
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="check_in">Fecha de llegada</label>
+          <input type="date" id="check_in" name="check_in" required />
+
+          <label for="check_out">Fecha de salida</label>
+          <input type="date" id="check_out" name="check_out" required />
+
+          <label for="guests">Número de huéspedes</label>
+          <input type="number" id="guests" name="guests" min="1" value="1" required />
+
+          <button type="submit" class="primary">Guardar reserva</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; {{ 2024 }} Hotel Pacific. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

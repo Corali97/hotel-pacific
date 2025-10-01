@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel Pacific - Reservas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header>
+      <h1>Hotel Pacific</h1>
+      <nav>
+        <a href="{{ url_for('index') }}">Nueva reserva</a>
+        <a href="{{ url_for('reservations') }}" class="active">Listado de reservas</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Reservas registradas</h2>
+        {% if reservations %}
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Llegada</th>
+                <th>Salida</th>
+                <th>Huéspedes</th>
+                <th>Creado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reservation in reservations %}
+                <tr>
+                  <td>{{ reservation[1] }}</td>
+                  <td>{{ reservation[2] }}</td>
+                  <td>{{ reservation[3] }}</td>
+                  <td>{{ reservation[4] }}</td>
+                  <td>{{ reservation[5] }}</td>
+                  <td>{{ reservation[6] }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>No hay reservas registradas aún. Crea la primera desde el formulario.</p>
+        {% endif %}
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; {{ 2024 }} Hotel Pacific. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

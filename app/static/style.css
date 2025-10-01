@@ -1,0 +1,145 @@
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --primary: #006d77;
+  --primary-dark: #004f56;
+  --background: #f6f8fb;
+  --card-bg: #ffffff;
+  --text-color: #1b1b1f;
+  --border: #d7dde5;
+  --success: #1b998b;
+  --error: #ef476f;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-color);
+}
+
+header {
+  background: linear-gradient(120deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+nav a {
+  color: #fff;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+nav a:hover,
+nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+button {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+button.primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button.primary:hover {
+  background: var(--primary-dark);
+}
+
+.messages {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.messages li {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.messages li.success {
+  background: rgba(27, 153, 139, 0.15);
+  color: var(--success);
+}
+
+.messages li.error {
+  background: rgba(239, 71, 111, 0.15);
+  color: var(--error);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+table th,
+table td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+table th {
+  background: rgba(0, 109, 119, 0.08);
+}
+
+table tbody tr:hover {
+  background: rgba(0, 109, 119, 0.05);
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  color: #5a5d63;
+}
