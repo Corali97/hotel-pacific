@@ -120,6 +120,12 @@ def render_form(message: str | None = None, category: str | None = None, data: D
 # Nueva función para mostrar el listado de reservas
 def render_reservations() -> bytes:
     reservations = get_reservations()
+    # Precios por tipo de habitación
+    precios = {
+        "estándar": 40000,
+        "deluxe": 70000,
+        "suite": 105000,
+    }
     if not reservations:
         content = """
             <h2>Reservas registradas</h2>
@@ -137,12 +143,15 @@ def render_reservations() -> bytes:
                         <th>Salida</th>
                         <th>Huéspedes</th>
                         <th>Tipo</th>
+                        <th>Precio</th>
                         <th>Creado</th>
                     </tr>
                 </thead>
                 <tbody>
         """
         for r in reservations:
+            tipo = r[5]
+            precio = precios.get(tipo, 0)
             content += f"""
                 <tr>
                     <td>{r[0]}</td>
@@ -150,7 +159,8 @@ def render_reservations() -> bytes:
                     <td>{r[2]}</td>
                     <td>{r[3]}</td>
                     <td>{r[4]}</td>
-                    <td>{r[5]}</td>
+                    <td>{tipo.capitalize()}</td>
+                    <td>${precio:,} por día</td>
                     <td>{r[6]}</td>
                 </tr>
             """
@@ -194,8 +204,40 @@ def application(environ, start_response):
         return [render_form(data={"room_type": room_type})]
 
     if path == "/" and method == "GET":
+        # Listado de habitaciones y precios en home
+        habitaciones = [
+            {"tipo": "estándar", "nombre": "Habitación estándar", "precio": 40000, "img": "https://img.icons8.com/ios-filled/50/bed.png"},
+            {"tipo": "deluxe", "nombre": "Habitación deluxe", "precio": 70000, "img": "https://img.icons8.com/ios-filled/50/bed.png"},
+            {"tipo": "suite", "nombre": "Habitación suite", "precio": 105000, "img": "https://img.icons8.com/ios-filled/50/bed.png"},
+        ]
+        content = """
+            <h2>Habitaciones disponibles</h2>
+            <table style='width:100%;background:#fff;color:#222;border-radius:1rem;box-shadow:0 8px 24px rgba(0,0,0,0.08);overflow:hidden;'>
+                <thead>
+                    <tr style='background:#e0f7fa;'>
+                        <th>Imagen</th>
+                        <th>Tipo</th>
+                        <th>Precio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        for h in habitaciones:
+            content += f"""
+                <tr>
+                    <td style='text-align:center;'><img src='{h['img']}' alt='{h['tipo']}' /></td>
+                    <td>{h['nombre']}</td>
+                    <td>${h['precio']:,} por día</td>
+                    <td><a class='primary' style='background:#19b34a;color:#fff;padding:0.5rem 1rem;border-radius:0.5rem;text-decoration:none;' href='/reservar?tipo={h['tipo']}'>Reservar</a></td>
+                </tr>
+            """
+        content += """
+                </tbody>
+            </table>
+        """
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
-        return [render_form()]
+        return [(HTML_HEAD + content + HTML_FOOT).encode("utf-8")]
 
     if path == "/reservas" and method == "GET":
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
