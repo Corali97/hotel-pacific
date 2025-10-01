@@ -53,6 +53,7 @@ def init_db() -> None:
                 check_in DATE NOT NULL,
                 check_out DATE NOT NULL,
                 guests INTEGER NOT NULL,
+                room_type TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
@@ -63,7 +64,7 @@ def get_reservations() -> Tuple[Tuple]:
     with sqlite3.connect(DB_PATH) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT guest_name, email, check_in, check_out, guests, created_at FROM reservations ORDER BY created_at DESC"
+            "SELECT guest_name, email, check_in, check_out, guests, room_type, created_at FROM reservations ORDER BY created_at DESC"
         ).fetchall()
         return tuple(tuple(row[col] for col in row.keys()) for row in rows)
 
@@ -80,22 +81,29 @@ def render_form(message: str | None = None, category: str | None = None, data: D
         <h2>Formulario de reserva</h2>
         {render_messages(message, category)}
         <form method=\"post\" action=\"/guardar\" class=\"form-grid\">
-          <label for=\"guest_name\">Nombre completo</label>
-          <input type=\"text\" id=\"guest_name\" name=\"guest_name\" value=\"{data.get('guest_name', '')}\" required />
+            <label for=\"guest_name\">Nombre completo</label>
+            <input type=\"text\" id=\"guest_name\" name=\"guest_name\" value=\"{data.get('guest_name', '')}\" required />
 
-          <label for=\"email\">Correo electrónico</label>
-          <input type=\"email\" id=\"email\" name=\"email\" value=\"{data.get('email', '')}\" required />
+            <label for=\"email\">Correo electrónico</label>
+            <input type=\"email\" id=\"email\" name=\"email\" value=\"{data.get('email', '')}\" required />
 
-          <label for=\"check_in\">Fecha de llegada</label>
-          <input type=\"date\" id=\"check_in\" name=\"check_in\" value=\"{data.get('check_in', '')}\" required />
+            <label for=\"check_in\">Fecha de llegada</label>
+            <input type=\"date\" id=\"check_in\" name=\"check_in\" value=\"{data.get('check_in', '')}\" required />
 
-          <label for=\"check_out\">Fecha de salida</label>
-          <input type=\"date\" id=\"check_out\" name=\"check_out\" value=\"{data.get('check_out', '')}\" required />
+            <label for=\"check_out\">Fecha de salida</label>
+            <input type=\"date\" id=\"check_out\" name=\"check_out\" value=\"{data.get('check_out', '')}\" required />
 
-          <label for=\"guests\">Número de huéspedes</label>
-          <input type=\"number\" id=\"guests\" name=\"guests\" min=\"1\" value=\"{data.get('guests', '1')}\" required />
+            <label for=\"guests\">Número de huéspedes</label>
+            <input type=\"number\" id=\"guests\" name=\"guests\" min=\"1\" value=\"{data.get('guests', '1')}\" required />
 
-          <button type=\"submit\" class=\"primary\">Guardar reserva</button>
+            <label for=\"room_type\">Tipo de habitación</label>
+            <select id=\"room_type\" name=\"room_type\" required>
+                <option value=\"estándar\" {'selected' if data.get('room_type', '') == 'estándar' else ''}>Estándar</option>
+                <option value=\"deluxe\" {'selected' if data.get('room_type', '') == 'deluxe' else ''}>Deluxe</option>
+                <option value=\"suite\" {'selected' if data.get('room_type', '') == 'suite' else ''}>Suite</option>
+            </select>
+
+            <button type=\"submit\" class=\"primary\">Guardar reserva</button>
         </form>
     """
     return (HTML_HEAD + content + HTML_FOOT).encode("utf-8")
@@ -145,6 +153,13 @@ def parse_post_data(environ) -> Dict[str, str]:
 
 
 def application(environ, start_response):
+    if path == "/reservar" and method == "GET":
+        # Obtener el tipo de habitación desde la query string
+        query = environ.get("QUERY_STRING", "")
+        params = parse_qs(query)
+        room_type = params.get("tipo", [""])[0]
+        start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
+        return [render_form(data={"room_type": room_type})]
     init_db()
     path = environ.get("PATH_INFO", "/")
     method = environ.get("REQUEST_METHOD", "GET").upper()
@@ -157,9 +172,15 @@ def application(environ, start_response):
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
         return [render_reservations()]
 
+    if path == "/habitaciones" and method == "GET":
+        with open(BASE_DIR / "templates" / "rooms.html", encoding="utf-8") as f:
+            html = f.read()
+        start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
+        return [html.encode("utf-8")]
+
     if path == "/guardar" and method == "POST":
         data = parse_post_data(environ)
-        required = ["guest_name", "email", "check_in", "check_out", "guests"]
+        required = ["guest_name", "email", "check_in", "check_out", "guests", "room_type"]
         if not all(data.get(field, "").strip() for field in required):
             start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
             return [render_form("Todos los campos son obligatorios.", "error", data)]
@@ -175,8 +196,8 @@ def application(environ, start_response):
         with sqlite3.connect(DB_PATH) as conn:
             conn.execute(
                 """
-                INSERT INTO reservations (guest_name, email, check_in, check_out, guests)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO reservations (guest_name, email, check_in, check_out, guests, room_type)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
                 (
                     data["guest_name"].strip(),
@@ -184,6 +205,7 @@ def application(environ, start_response):
                     data["check_in"].strip(),
                     data["check_out"].strip(),
                     guests,
+                    data["room_type"].strip(),
                 ),
             )
 

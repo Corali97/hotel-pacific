@@ -5,13 +5,12 @@ Este repositorio contiene el prototipo funcional del sistema de reservas del Hot
 
 ## 🚀 Cómo ejecutar el MVP
 
-1. (Opcional) Crear y activar un entorno virtual de Python 3.11.
-2. Instalar dependencias estándar (no se requieren paquetes externos).
-3. Ejecutar la aplicación:
+
+1. Ejecutar la aplicación:
 	```bash
 	python app/app.py
 	```
-4. Abrir `http://127.0.0.1:5000/` en el navegador para acceder al formulario de reservas.
+2. Abrir `http://127.0.0.1:5000/` en el navegador para acceder al formulario de reservas.
 
 La base de datos SQLite (`app/reservations.db`) se crea automáticamente la primera vez que se levanta el servidor.
 
