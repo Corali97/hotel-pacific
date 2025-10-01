@@ -209,9 +209,9 @@ def application(environ, start_response):
     if path == "/" and method == "GET":
         # Listado de habitaciones y precios en home
         habitaciones = [
-            {"tipo": "estándar", "nombre": "Habitación estándar", "precio": 40000, "img": "https://img.icons8.com/ios-filled/50/bed.png"},
-            {"tipo": "deluxe", "nombre": "Habitación deluxe", "precio": 70000, "img": "https://img.icons8.com/ios-filled/50/bed.png"},
-            {"tipo": "suite", "nombre": "Habitación suite", "precio": 105000, "img": "https://img.icons8.com/ios-filled/50/bed.png"},
+            {"tipo": "estándar", "nombre": "Habitación estándar", "precio": 40000, "img": "/static/estandar.jpg"},
+            {"tipo": "deluxe", "nombre": "Habitación deluxe", "precio": 70000, "img": "/static/deluxe.jpg"},
+            {"tipo": "suite", "nombre": "Habitación suite", "precio": 105000, "img": "/static/suite.jpg"},
         ]
         content = """
             <h2>Habitaciones disponibles</h2>
@@ -229,7 +229,7 @@ def application(environ, start_response):
         for h in habitaciones:
             content += f"""
                 <tr>
-                    <td style='text-align:center;'><img src='{h['img']}' alt='{h['tipo']}' /></td>
+                    <td style='text-align:center;'><img src='{h['img']}' alt='{h['tipo']}' style='width:180px;height:120px;object-fit:cover;border-radius:0.75rem;box-shadow:0 2px 8px rgba(0,0,0,0.08);' /></td>
                     <td>{h['nombre']}</td>
                     <td>${h['precio']:,} por día</td>
                     <td><a class='primary' style='background:#19b34a;color:#fff;padding:0.5rem 1rem;border-radius:0.5rem;text-decoration:none;' href='/reservar?tipo={h['tipo']}'>Reservar</a></td>
