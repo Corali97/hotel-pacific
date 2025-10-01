@@ -77,6 +77,18 @@ def render_messages(message: str | None, category: str | None) -> str:
 
 def render_form(message: str | None = None, category: str | None = None, data: Dict[str, str] | None = None) -> bytes:
     data = data or {}
+    room_type_options = [
+        ('estándar', 'Estándar'),
+        ('deluxe', 'Deluxe'),
+        ('suite', 'Suite'),
+    ]
+    room_type_select = '<label for="room_type">Tipo de habitación</label><select id="room_type" name="room_type" required>'
+    selected_type = data.get('room_type', '')
+    for value, label in room_type_options:
+        selected_attr = ' selected="selected"' if selected_type == value else ''
+        room_type_select += f'<option value="{value}"{selected_attr}>{label}</option>'
+    room_type_select += '</select>'
+
     content = f"""
         <h2>Formulario de reserva</h2>
         {render_messages(message, category)}
@@ -96,12 +108,7 @@ def render_form(message: str | None = None, category: str | None = None, data: D
             <label for=\"guests\">Número de huéspedes</label>
             <input type=\"number\" id=\"guests\" name=\"guests\" min=\"1\" value=\"{data.get('guests', '1')}\" required />
 
-            <label for=\"room_type\">Tipo de habitación</label>
-            <select id=\"room_type\" name=\"room_type\" required>
-                <option value=\"estándar\"{' selected="selected"' if data.get('room_type', '') == 'estándar' else ''}>Estándar</option>
-                <option value=\"deluxe\"{' selected="selected"' if data.get('room_type', '') == 'deluxe' else ''}>Deluxe</option>
-                <option value=\"suite\"{' selected="selected"' if data.get('room_type', '') == 'suite' else ''}>Suite</option>
-            </select>
+            {room_type_select}
 
             <button type=\"submit\" class=\"primary\">Guardar reserva</button>
         </form>
@@ -112,29 +119,30 @@ def render_form(message: str | None = None, category: str | None = None, data: D
 
 def render_reservations() -> bytes:
     reservations = get_reservations()
-    if reservations:
-        rows_html = "".join(
-            f"<tr><td>{name}</td><td>{email}</td><td>{check_in}</td><td>{check_out}</td><td>{guests}</td><td>{created_at}</td></tr>"
-            for name, email, check_in, check_out, guests, created_at in reservations
-        )
-        table = f"""
-        <h2>Reservas registradas</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Llegada</th>
-              <th>Salida</th>
-              <th>Huéspedes</th>
-              <th>Creado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows_html}
-          </tbody>
-        </table>
-        """
+        if reservations:
+                rows_html = "".join(
+                        f"<tr><td>{name}</td><td>{email}</td><td>{check_in}</td><td>{check_out}</td><td>{guests}</td><td>{room_type}</td><td>{created_at}</td></tr>"
+                        for name, email, check_in, check_out, guests, room_type, created_at in reservations
+                )
+                table = f"""
+                <h2>Reservas registradas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Llegada</th>
+                            <th>Salida</th>
+                            <th>Huéspedes</th>
+                            <th>Tipo de habitación</th>
+                            <th>Creado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows_html}
+                    </tbody>
+                </table>
+                """
     else:
         table = """
         <h2>Reservas registradas</h2>
@@ -154,6 +162,16 @@ def parse_post_data(environ) -> Dict[str, str]:
 
 
 def application(environ, start_response):
+    if path == "/dashboard" and method == "GET":
+        with open(BASE_DIR / "templates" / "dashboard.html", encoding="utf-8") as f:
+            html = f.read()
+        start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
+        return [html.encode("utf-8")]
+    if path == "/pagos" and method == "GET":
+        with open(BASE_DIR / "templates" / "pagos.html", encoding="utf-8") as f:
+            html = f.read()
+        start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
+        return [html.encode("utf-8")]
     init_db()
     path = environ.get("PATH_INFO", "/")
     method = environ.get("REQUEST_METHOD", "GET").upper()

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel Pacific - Formas de pago</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <style>
+      .pay-options { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin: 2rem 0; }
+      .pay-card { background: #fff; color: #222; border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.08); padding: 2rem; min-width: 260px; text-align: center; }
+      .pay-card img { max-width: 120px; margin: 1rem auto; display: block; }
+      .pay-btn { background: #006d77; color: #fff; border: none; padding: 0.7rem 1.2rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+      .pay-btn:hover { background: #004f56; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Hotel Pacific</h1>
+      <nav>
+        <a href="/">Inicio</a>
+        <a href="/reservas">Reservas</a>
+        <a href="/habitaciones">Habitaciones</a>
+      </nav>
+    </header>
+    <main>
+      <section class="card">
+        <h2>Formas de pago</h2>
+        <p>Selecciona tu método de pago preferido para completar la reserva.</p>
+        <div class="pay-options">
+          <div class="pay-card">
+            <h3>Transferencia bancaria</h3>
+            <p>Banco: EjemploBank<br>Cuenta: 123456789<br>CBU: 0000003100012345678901</p>
+            <button class="pay-btn">Ver datos</button>
+          </div>
+          <div class="pay-card">
+            <h3>Tarjeta de crédito/débito</h3>
+            <img src="https://img.icons8.com/color/96/credit-card.png" alt="Tarjeta" />
+            <button class="pay-btn">Pagar con tarjeta</button>
+          </div>
+          <div class="pay-card">
+            <h3>Pago QR</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=HotelPacificPago" alt="QR Pago" />
+            <button class="pay-btn">Escanear QR</button>
+          </div>
+        </div>
+  <a href="#" onclick="window.history.back();return false;" class="pay-btn" style="background:#ef476f;">Cancelar</a>
+  <a href="/" class="pay-btn" style="background:#19b34a;margin-left:1rem;">Inicio</a>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2024 Hotel Pacific. Todos los derechos reservados.</p>
+    </footer>
+  </body>
+</html>

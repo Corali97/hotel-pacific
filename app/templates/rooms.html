@@ -31,30 +31,37 @@
       </nav>
     </div>
     <div class="room-list">
-      <div class="room">
-        <img src="https://img.icons8.com/ios-filled/50/bed.png" alt="Estándar" />
-        <div class="room-info">
-          <div class="room-title">Habitación estándar</div>
-          <div class="room-price">$40.000 por día</div>
-        </div>
-  <a class="reserve-btn" href="/reservar?tipo=estándar">Reservar</a>
-      </div>
-      <div class="room">
-        <img src="https://img.icons8.com/ios-filled/50/bed.png" alt="Deluxe" />
-        <div class="room-info">
-          <div class="room-title">Habitación deluxe</div>
-          <div class="room-price">$70.000 por día</div>
-        </div>
-  <a class="reserve-btn" href="/reservar?tipo=deluxe">Reservar</a>
-      </div>
-      <div class="room">
-        <img src="https://img.icons8.com/ios-filled/50/bed.png" alt="Suite" />
-        <div class="room-info">
-          <div class="room-title">Habitación suite</div>
-          <div class="room-price">$105.000 por día</div>
-        </div>
-  <a class="reserve-btn" href="/reservar?tipo=suite">Reservar</a>
-      </div>
+      <h2>Listado de habitaciones</h2>
+      <table style="width:100%;background:#fff;color:#222;border-radius:1rem;box-shadow:0 8px 24px rgba(0,0,0,0.08);overflow:hidden;">
+        <thead>
+          <tr style="background:#e0f7fa;">
+            <th>Imagen</th>
+            <th>Tipo</th>
+            <th>Precio</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;"><img src="https://img.icons8.com/ios-filled/50/bed.png" alt="Estándar" /></td>
+            <td>Habitación estándar</td>
+            <td>$40.000 por día</td>
+            <td><a class="reserve-btn" href="/reservar?tipo=estándar">Reservar</a></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><img src="https://img.icons8.com/ios-filled/50/bed.png" alt="Deluxe" /></td>
+            <td>Habitación deluxe</td>
+            <td>$70.000 por día</td>
+            <td><a class="reserve-btn" href="/reservar?tipo=deluxe">Reservar</a></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><img src="https://img.icons8.com/ios-filled/50/bed.png" alt="Suite" /></td>
+            <td>Habitación suite</td>
+            <td>$105.000 por día</td>
+            <td><a class="reserve-btn" href="/reservar?tipo=suite">Reservar</a></td>
+          </tr>
+        </tbody>
+      </table>
       <a href="#" class="compare-link">Comparar habitaciones</a>
     </div>
   </body>
