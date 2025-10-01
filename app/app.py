@@ -286,9 +286,24 @@ def application(environ, start_response):
         start_response("303 See Other", [("Location", "/reservas")])
         return [b""]
 
-    if path == "/static/style.css" and method == "GET":
-        start_response("200 OK", [("Content-Type", "text/css; charset=utf-8")])
-        return [STYLE_PATH.read_bytes()]
+    if path.startswith("/static/") and method == "GET":
+        static_file = BASE_DIR / "static" / path[len("/static/"):]
+        if static_file.exists() and static_file.is_file():
+            # Determinar el tipo de contenido
+            ext = static_file.suffix.lower()
+            if ext == ".css":
+                content_type = "text/css; charset=utf-8"
+            elif ext in [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp"]:
+                content_type = f"image/{ext[1:]}"
+            elif ext == ".svg":
+                content_type = "image/svg+xml"
+            else:
+                content_type = "application/octet-stream"
+            start_response("200 OK", [("Content-Type", content_type)])
+            return [static_file.read_bytes()]
+        else:
+            start_response("404 Not Found", [("Content-Type", "text/plain; charset=utf-8")])
+            return [b"Ruta no encontrada"]
 
     start_response("404 Not Found", [("Content-Type", "text/plain; charset=utf-8")])
     return [b"Ruta no encontrada"]
