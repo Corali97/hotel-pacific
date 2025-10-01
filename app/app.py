@@ -106,6 +106,7 @@ def render_form(message: str | None = None, category: str | None = None, data: D
             <button type=\"submit\" class=\"primary\">Guardar reserva</button>
         </form>
     """
+    print(content)  # Debug: mostrar el HTML generado en la consola
     return (HTML_HEAD + content + HTML_FOOT).encode("utf-8")
 
 
