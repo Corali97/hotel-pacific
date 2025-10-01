@@ -153,6 +153,9 @@ def parse_post_data(environ) -> Dict[str, str]:
 
 
 def application(environ, start_response):
+    init_db()
+    path = environ.get("PATH_INFO", "/")
+    method = environ.get("REQUEST_METHOD", "GET").upper()
     if path == "/reservar" and method == "GET":
         # Obtener el tipo de habitación desde la query string
         query = environ.get("QUERY_STRING", "")
@@ -160,9 +163,6 @@ def application(environ, start_response):
         room_type = params.get("tipo", [""])[0]
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
         return [render_form(data={"room_type": room_type})]
-    init_db()
-    path = environ.get("PATH_INFO", "/")
-    method = environ.get("REQUEST_METHOD", "GET").upper()
 
     if path == "/" and method == "GET":
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
