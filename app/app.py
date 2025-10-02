@@ -55,6 +55,7 @@ def init_db() -> None:
                 check_out DATE NOT NULL,
                 guests INTEGER NOT NULL,
                 room_type TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pendiente',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
@@ -66,14 +67,16 @@ def init_db() -> None:
         except sqlite3.OperationalError:
             # La columna ya existe
             pass
-
->>>>>>> theirs
-
+        
 def get_reservations() -> Tuple[Tuple]:
     with sqlite3.connect(DB_PATH) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT guest_name, email, check_in, check_out, guests, room_type, created_at FROM reservations ORDER BY created_at DESC"
+            """
+            SELECT id, guest_name, email, check_in, check_out, guests, room_type, status, created_at
+            FROM reservations
+            ORDER BY created_at DESC
+            """
         ).fetchall()
         return tuple(tuple(row[col] for col in row.keys()) for row in rows)
 
@@ -152,6 +155,7 @@ def render_reservations() -> bytes:
                         <th>Salida</th>
                         <th>Huéspedes</th>
                         <th>Tipo</th>
+                        <th>Estado</th>
                         <th>Precio</th>
                         <th>Creado</th>
                         <th>Acción</th>
@@ -160,19 +164,43 @@ def render_reservations() -> bytes:
                 <tbody>
         """
         for r in reservations:
-            tipo = r[5]
+            reserva_id = r[0]
+            tipo = r[6]
             precio = precios.get(tipo, 0)
+            estado = (r[7] or "pendiente").lower()
+            estado_legible = "Pagado" if estado == "pagado" else "Pendiente"
+            estado_clase = "status-badge status-paid" if estado == "pagado" else "status-badge status-pending"
+            if estado == "pagado":
+                accion = f"""
+                    <form method='post' action='/reservas/estado' class='inline-form'>
+                        <input type='hidden' name='id' value='{reserva_id}' />
+                        <input type='hidden' name='status' value='pendiente' />
+                        <button type='submit' class='action-button action-secondary'>Marcar como pendiente</button>
+                    </form>
+                """
+            else:
+                accion = f"""
+                    <div class='action-group'>
+                        <a class='action-button action-link' href='/pagos?id={reserva_id}'>Ver pagos</a>
+                        <form method='post' action='/reservas/estado' class='inline-form'>
+                            <input type='hidden' name='id' value='{reserva_id}' />
+                            <input type='hidden' name='status' value='pagado' />
+                            <button type='submit' class='action-button action-primary'>Marcar como pagado</button>
+                        </form>
+                    </div>
+                """
             content += f"""
                 <tr>
-                    <td>{r[0]}</td>
                     <td>{r[1]}</td>
                     <td>{r[2]}</td>
                     <td>{r[3]}</td>
                     <td>{r[4]}</td>
+                    <td>{r[5]}</td>
                     <td>{tipo.capitalize()}</td>
+                    <td><span class='{estado_clase}'>{estado_legible}</span></td>
                     <td>${precio:,} por día</td>
-                    <td>{r[6]}</td>
-                    <td><a class='primary' style='background:#ef476f;color:#fff;padding:0.5rem 1rem;border-radius:0.5rem;text-decoration:none;' href='/pagos'>Pagar</a></td>
+                    <td>{r[8]}</td>
+                    <td>{accion}</td>
                 </tr>
             """
         content += """
@@ -253,6 +281,21 @@ def application(environ, start_response):
     if path == "/reservas" and method == "GET":
         start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
         return [render_reservations()]
+
+    if path == "/reservas/estado" and method == "POST":
+        data = parse_post_data(environ)
+        reservation_id = data.get("id", "").strip()
+        status = (data.get("status", "pendiente") or "pendiente").strip().lower()
+        if status not in {"pagado", "pendiente"}:
+            status = "pendiente"
+        if reservation_id.isdigit():
+            with sqlite3.connect(DB_PATH) as conn:
+                conn.execute(
+                    "UPDATE reservations SET status = ? WHERE id = ?",
+                    (status, int(reservation_id)),
+                )
+        start_response("303 See Other", [("Location", "/reservas")])
+        return [b""]
 
     if path == "/habitaciones" and method == "GET":
 

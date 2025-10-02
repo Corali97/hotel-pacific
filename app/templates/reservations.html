@@ -27,18 +27,31 @@
                 <th>Llegada</th>
                 <th>Salida</th>
                 <th>Huéspedes</th>
+                <th>Tipo</th>
+                <th>Estado de pago</th>
                 <th>Creado</th>
               </tr>
             </thead>
             <tbody>
               {% for reservation in reservations %}
+                {% set offset = 1 if reservation|length >= 8 else 0 %}
+                {% set status_index = offset + 6 %}
+                {% set has_estado = reservation|length > status_index + 1 %}
+                {% set estado = reservation[status_index] if has_estado else 'pendiente' %}
+                {% set created_index = status_index + 1 if reservation|length > status_index + 1 else status_index %}
                 <tr>
-                  <td>{{ reservation[1] }}</td>
-                  <td>{{ reservation[2] }}</td>
-                  <td>{{ reservation[3] }}</td>
-                  <td>{{ reservation[4] }}</td>
-                  <td>{{ reservation[5] }}</td>
-                  <td>{{ reservation[6] }}</td>
+                  <td>{{ reservation[offset] }}</td>
+                  <td>{{ reservation[offset + 1] }}</td>
+                  <td>{{ reservation[offset + 2] }}</td>
+                  <td>{{ reservation[offset + 3] }}</td>
+                  <td>{{ reservation[offset + 4] }}</td>
+                  <td>{{ reservation[offset + 5] }}</td>
+                  <td>
+                    <span class="status-badge {{ 'status-paid' if estado == 'pagado' else 'status-pending' }}">
+                      {{ 'Pagado' if estado == 'pagado' else 'Pendiente' }}
+                    </span>
+                  </td>
+                  <td>{{ reservation[created_index] }}</td>
                 </tr>
               {% endfor %}
             </tbody>

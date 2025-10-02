@@ -149,6 +149,81 @@ table tbody tr:hover {
   background: rgba(0, 109, 119, 0.05);
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-paid {
+  background: rgba(27, 153, 139, 0.15);
+  color: var(--success);
+}
+
+.status-pending {
+  background: rgba(239, 71, 111, 0.12);
+  color: var(--error);
+}
+
+.action-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inline-form {
+  display: inline;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 16px rgba(0, 109, 119, 0.12);
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+.action-primary {
+  background: #19b34a;
+  color: #fff;
+}
+
+.action-secondary {
+  background: rgba(0, 109, 119, 0.12);
+  color: var(--primary);
+}
+
+.action-link {
+  background: var(--primary);
+  color: #fff;
+}
+
+.action-secondary:hover,
+.action-link:hover,
+.action-primary:hover {
+  filter: brightness(0.95);
+}
+
 footer {
   text-align: center;
   padding: 1rem 0;
