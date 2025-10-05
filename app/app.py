@@ -67,11 +67,8 @@ def init_db() -> None:
         except sqlite3.OperationalError:
             # La columna ya existe
             pass
-<<<<<<< ours
         
-=======
 
->>>>>>> theirs
 def get_reservations() -> Tuple[Tuple]:
     with sqlite3.connect(DB_PATH) as conn:
         conn.row_factory = sqlite3.Row
