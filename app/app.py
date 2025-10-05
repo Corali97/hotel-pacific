@@ -67,7 +67,11 @@ def init_db() -> None:
         except sqlite3.OperationalError:
             # La columna ya existe
             pass
+<<<<<<< ours
         
+=======
+
+>>>>>>> theirs
 def get_reservations() -> Tuple[Tuple]:
     with sqlite3.connect(DB_PATH) as conn:
         conn.row_factory = sqlite3.Row
@@ -298,7 +302,10 @@ def application(environ, start_response):
         return [b""]
 
     if path == "/habitaciones" and method == "GET":
-
+        with open(BASE_DIR / "templates" / "rooms.html", encoding="utf-8") as f:
+            html = f.read()
+        start_response("200 OK", [("Content-Type", "text/html; charset=utf-8")])
+        return [html.encode("utf-8")]
 
     if path == "/guardar" and method == "POST":
         data = parse_post_data(environ)
