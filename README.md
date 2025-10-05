@@ -18,10 +18,10 @@ La base de datos SQLite (`app/reservations.db`) se crea automáticamente la prim
 - `/app` → Código fuente del MVP conectado a la base de datos.
 - `/docs/uml` → Diagramas UML.
 - `/docs/vistas` → Mockups, prototipos y capturas de pantalla del MVP en ejecución.
-- `/docs/testing` → Evidencia de pruebas de usuario (formato PRY3211).
+- `/docs/testing` → Reportes de QA (formato PRY3211), manual de usuario de testing y referencias a evidencias.
 - `/docs/DOD` → Planilla Definition of Done.
 - `/design` → Archivos de diseño.
 
 ## 🧪 Escenarios probados
 
-Consulta `docs/testing/PRY3211_Exp3_S8_Formato_de_respuestas.md` para revisar las pruebas realizadas sobre las historias de usuario del MVP.
+Consulta `docs/testing/PRY3211_Exp3_S8_Formato_de_respuestas.md` para revisar las pruebas realizadas sobre las historias de usuario del MVP y `docs/testing/Manual_de_Usuario_Testing.md` para replicar los flujos cubiertos.
